@@ -1,3 +1,4 @@
+let g:ale_completion_enabled = 1
 " Plugin 
 call plug#begin()
 
@@ -10,6 +11,7 @@ Plug 'skywind3000/asyncrun.vim'
 let g:asyncrun_open = 6
 
 Plug 'voldikss/vim-floaterm'
+Plug 'dense-analysis/ale'
 
 call plug#end()
 
@@ -21,7 +23,7 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 noremap <silent><f5> :AsyncTask file-run<cr>
-noremap <silent><f9> :AsyncTask file-build<cr>
+noremap <silent><f6> :AsyncTask file-build<cr>
 
 noremap <C-\> :FloatermNew<CR>
 noremap <C-t> :FloatermToggle<CR>
