@@ -1,24 +1,16 @@
-# Created by newuser for 5.9
-
-### Added by Zinit's installer
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
-    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
-        print -P "%F{33} %F{34}Installation successful.%f%b" || \
-        print -P "%F{160} The clone has failed.%f%b"
-fi
-
+# Export PATH
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
 export PATH
 
+# Zinit
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+# fzf opts
 export FZF_DEFAULT_OPTS="
 --layout=reverse
 --info=inline
@@ -27,17 +19,33 @@ export FZF_DEFAULT_OPTS="
 --preview-window=:hidden
 --preview '([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
 --color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'
---prompt='∼ ' --pointer='▶' --marker='✓'
+--prompt='❯ ' --pointer='➔' --marker='✓'
 --bind 'ctrl-/:toggle-preview'
 --bind 'ctrl-a:select-all'
---bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
 --bind 'ctrl-e:execute(echo {+} | xargs -o vim)'
 --bind 'ctrl-v:execute(code {+})'
 "
 
-zstyle ':completion:*' menu select
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+# fzf_tab opts
 
+# key bind
+zstyle ':fzf-tab:complete:*' fzf-bindings \
+	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
+	'ctrl-a:select-all'
+zstyle ':completion:*' menu select
+
+# systemctl preview
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -l --color=always $realpath'
+zstyle ':fzf-tab:*' ignore 4
+
+# kill preview
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+
+# history opt
 HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=5000
@@ -52,15 +60,13 @@ setopt hist_save_no_dups        # Do Not Write A Duplicate Event To The History 
 setopt hist_verify              # Do Not Execute Immediately Upon History Expansion.
 setopt extended_history         # Show Timestamp In History.
 
-autoload compinit; compinit
+ZINIT[COMPINIT_OPTS]='-C'
 
+# Plugs 
 zinit ice as"command" from"gh-r" \
   atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
   atpull"%atclone" src"init.zsh"
 zinit light starship/starship
-
-zinit ice wait lucid depth"1"
-zinit light Aloxaf/fzf-tab
 
 zinit ice wait lucid as"program" from"gh-r" mv"exa* -> exa" pick"bin/exa"
 zinit light ogham/exa
@@ -84,16 +90,30 @@ zinit ice from"gh-r" as"program" pick"*/navi"
 zinit light "denisidoro/navi"
 
 zinit ice from"gh-r" as"program"
-zinit light junegunn/fzf-bin
+zinit light junegunn/fzf
+
+zinit ice id-as"chezmoi_completion" \
+    if'[[ -n "$commands[chezmoi]" ]]' \
+    atclone"chezmoi completion zsh > _chezmoi" \
+    pick"./_chezmoi"
+zinit light zdharma-continuum/null
+
+zinit ice lucid wait depth'1' multisrc"shell/{completion,key-bindings}.zsh" id-as"junegunn/fzf_completions" pick"/dev/null"
+zinit light junegunn/fzf
 
 zinit ice as"command" from"gh-r" mv"bat*/bat -> bat" pick"bat"
 zinit light sharkdp/bat
 
-zinit ice depth=1 # optional, but avoids downloading the full history
-zinit light 3v1n0/zsh-bash-completions-fallback
+#zinit ice depth=1 # optional, but avoids downloading the full history
+#zinit light 3v1n0/zsh-bash-completions-fallback
 
+ZSH_AUTOSUGGEST_USE_ASYNC=1
 zinit wait lucid light-mode depth"1" for \
-  blockf atpull"zinit creinstall -q ." atload"zicdreplay" \
+  blockf atpull"zinit creinstall -q ." \
       zsh-users/zsh-completions \
   atload"_zsh_autosuggest_start; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
       zsh-users/zsh-autosuggestions
+
+zicompinit; zpcdreplay
+
+zinit light Aloxaf/fzf-tab

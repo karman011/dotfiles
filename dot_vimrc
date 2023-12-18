@@ -3,7 +3,6 @@ let g:ale_completion_enabled = 1
 call plug#begin()
 
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 
 Plug 'skywind3000/asynctasks.vim'
