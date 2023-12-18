@@ -19,6 +19,25 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+export FZF_DEFAULT_OPTS="
+--layout=reverse
+--info=inline
+--height=80%
+--multi
+--preview-window=:hidden
+--preview '([[ -f {} ]] && (bat --style=numbers --color=always {} || cat {})) || ([[ -d {} ]] && (tree -C {} | less)) || echo {} 2> /dev/null | head -200'
+--color='hl:148,hl+:154,pointer:032,marker:010,bg+:237,gutter:008'
+--prompt='∼ ' --pointer='▶' --marker='✓'
+--bind 'ctrl-/:toggle-preview'
+--bind 'ctrl-a:select-all'
+--bind 'ctrl-y:execute-silent(echo {+} | pbcopy)'
+--bind 'ctrl-e:execute(echo {+} | xargs -o vim)'
+--bind 'ctrl-v:execute(code {+})'
+"
+
+zstyle ':completion:*' menu select
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+
 HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=5000
@@ -33,16 +52,27 @@ setopt hist_save_no_dups        # Do Not Write A Duplicate Event To The History 
 setopt hist_verify              # Do Not Execute Immediately Upon History Expansion.
 setopt extended_history         # Show Timestamp In History.
 
+autoload compinit; compinit
+
 zinit ice as"command" from"gh-r" \
   atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
   atpull"%atclone" src"init.zsh"
 zinit light starship/starship
 
 zinit ice wait lucid depth"1"
+zinit light Aloxaf/fzf-tab
+
+zinit ice wait lucid as"program" from"gh-r" mv"exa* -> exa" pick"bin/exa"
+zinit light ogham/exa
+
+zinit ice wait lucid depth"1"
 zinit snippet OMZP::extract
 
 zinit ice wait lucid depth"1"
 zinit light agkozak/zsh-z
+
+zinit ice wait lucid depth"1"
+zinit light zdharma-continuum/history-search-multi-word
 
 zinit ice wait lucid depth"1"
 zinit snippet 'https://raw.githubusercontent.com/denisidoro/navi/master/shell/navi.plugin.zsh'
@@ -63,7 +93,7 @@ zinit ice depth=1 # optional, but avoids downloading the full history
 zinit light 3v1n0/zsh-bash-completions-fallback
 
 zinit wait lucid light-mode depth"1" for \
-  blockf atpull"zinit creinstall -q ." atload"zicompinit; zicdreplay" \
+  blockf atpull"zinit creinstall -q ." atload"zicdreplay" \
       zsh-users/zsh-completions \
   atload"_zsh_autosuggest_start; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
       zsh-users/zsh-autosuggestions
