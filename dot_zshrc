@@ -1,4 +1,4 @@
-### Zinit's installer
+# Zinit stuff
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
     command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
@@ -8,22 +8,29 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
 fi
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-typeset -gAH ZINIT;
+export ZPFX="$HOME/.local"
+typeset -U path
+typeset -gAH ZINIT
 ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
 ZINIT[COMPINIT_OPTS]='-C'
-source "${ZINIT_HOME}/zinit.zsh"
-# Export PATH
-export ZPFX="$HOME/.local"
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
 
+source "${ZINIT_HOME}/zinit.zsh"
+# PATH
+# if ! [[ "$PATH" =~ "$HOME/.local/bin:" ]]; then
+#     PATH="$HOME/.local/bin:$PATH"
+# fi
+# if ! [[ "$PATH" =~ "$HOME/bin:" ]]; then
+#     PATH="$HOME/bin:$PATH"
+# fi
+# export PATH
+
+path=($HOME/.local/bin $HOME/bin $path)
 export PATH
 
-# Zinit
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+# fzf opts
 export FZF_DEFAULT_OPTS="
 --layout=reverse
 --info=inline
@@ -41,8 +48,8 @@ export FZF_DEFAULT_OPTS="
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 setopt glob_dots
-# fzf_tab opts
 
+### fzf_tab opts
 # key bind
 zstyle ':fzf-tab:complete:*' fzf-bindings \
 	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
@@ -76,7 +83,7 @@ setopt hist_save_no_dups        # Do Not Write A Duplicate Event To The History 
 setopt hist_verify              # Do Not Execute Immediately Upon History Expansion.
 setopt extended_history         # Show Timestamp In History.
 
-# Plugs
+# plugins
 zinit light zdharma-continuum/zinit-annex-binary-symlink
 
 zinit ice from"gh-r" \
@@ -102,10 +109,6 @@ zinit light-mode wait lucid from'gh-r' lbin'!' nocompile for \
   mv"completions/exa.zsh -> _exa" @ogham/exa \
   @denisidoro/navi \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
-
-#zinit ice from'gh-r' lbin'!' nocompile \
-#    atclone"./topgrade --gen-completion zsh > _topgrade"
-#zinit light topgrade-rs/topgrade
 
 zinit ice as"completion" id-as"chezmoi_completion" nocompile \
     has"chezmoi" \
