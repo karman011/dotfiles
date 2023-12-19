@@ -1,10 +1,19 @@
+### Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-
+typeset -gAH ZINIT;
+ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+ZINIT[COMPINIT_OPTS]='-C'
 source "${ZINIT_HOME}/zinit.zsh"
 # Export PATH
+export ZPFX="$HOME/.local"
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
@@ -12,7 +21,6 @@ fi
 export PATH
 
 # Zinit
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
@@ -55,7 +63,7 @@ zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=do
 
 # history opt
 HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
-HISTSIZE=100000
+HISTSIZE=10000
 SAVEHIST=5000
 setopt appendhistory 
 
@@ -68,19 +76,14 @@ setopt hist_save_no_dups        # Do Not Write A Duplicate Event To The History 
 setopt hist_verify              # Do Not Execute Immediately Upon History Expansion.
 setopt extended_history         # Show Timestamp In History.
 
-ZINIT[COMPINIT_OPTS]='-C'
+# Plugs
+zinit light zdharma-continuum/zinit-annex-binary-symlink
 
-# Plugs 
-zinit ice as"command" from"gh-r" \
+zinit ice from"gh-r" \
   atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-  atpull"%atclone" src"init.zsh"
+  atpull"%atclone" src"init.zsh" \
+  lbin'!starship'
 zinit light starship/starship
-
-zinit ice as"program" from"gh-r" mv"completions/exa.zsh -> _exa" pick"bin/exa" 
-zinit light ogham/exa
-
-zinit ice as"command" from"gh-r" mv"ripgrep* -> ripgrep" pick"ripgrep/rg" completions
-zinit light BurntSushi/ripgrep
 
 zinit ice wait lucid depth"1"
 zinit snippet OMZP::extract
@@ -88,22 +91,23 @@ zinit snippet OMZP::extract
 zinit ice wait lucid depth"1"
 zinit light agkozak/zsh-z
 
-#zinit ice wait lucid depth"1"
-#zinit light zdharma-continuum/history-search-multi-word
-
 zinit ice wait lucid depth"1"
 zinit snippet 'https://raw.githubusercontent.com/denisidoro/navi/master/shell/navi.plugin.zsh'
 
-zinit ice from"gh-r" as"program" pick"topgrade"
-zinit light topgrade-rs/topgrade
+zinit light-mode wait lucid from'gh-r' lbin'!' nocompile for \
+  @junegunn/fzf \
+  @sharkdp/fd \
+  lbin'!**/rg' @BurntSushi/ripgrep \
+  atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
+  mv"completions/exa.zsh -> _exa" @ogham/exa \
+  @denisidoro/navi \
+  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
 
-zinit ice from"gh-r" as"program" pick"*/navi" completions
-zinit light "denisidoro/navi"
+#zinit ice from'gh-r' lbin'!' nocompile \
+#    atclone"./topgrade --gen-completion zsh > _topgrade"
+#zinit light topgrade-rs/topgrade
 
-zinit ice from"gh-r" as"program"
-zinit light junegunn/fzf
-
-zinit ice as"completion" id-as"chezmoi_completion" \
+zinit ice as"completion" id-as"chezmoi_completion" nocompile \
     has"chezmoi" \
     atclone"chezmoi completion zsh > _chezmoi" \
     pick"_chezmoi"
@@ -112,15 +116,6 @@ zinit light zdharma-continuum/null
 zinit ice lucid wait depth'1' multisrc"shell/{completion,key-bindings}.zsh" \
     cp"*/completion.zsh -> _fzf" id-as"junegunn/fzf_completions" pick"/dev/null"
 zinit light junegunn/fzf
-
-zinit ice as"command" from"gh-r" mv"bat*/autocomplete/bat.zsh -> _bat" pick"bat*/bat"
-zinit light sharkdp/bat
-
-zinit ice lucid as"command" from"gh-r" mv"fd* -> fd" pick"fd/fd" completions
-zinit light sharkdp/fd
-
-#zinit ice depth=1 # optional, but avoids downloading the full history
-#zinit light 3v1n0/zsh-bash-completions-fallback
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 zinit wait lucid light-mode depth"1" for \
@@ -132,3 +127,7 @@ zinit wait lucid light-mode depth"1" for \
 zicompinit; zpcdreplay
 
 zinit light Aloxaf/fzf-tab
+
+
+
+
