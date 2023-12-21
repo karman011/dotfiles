@@ -103,6 +103,7 @@ zinit ice depth'1'
 zinit light romkatv/powerlevel10k
 
 #bunch of lazy load plug
+ZSHZ_DATA="$ZDOTDIR/.z"
 zinit light-mode wait'1' lucid nocompletions for \
     OMZP::extract \
     'https://raw.githubusercontent.com/denisidoro/navi/master/shell/navi.plugin.zsh' \
