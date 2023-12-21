@@ -15,6 +15,10 @@ fi
 # fi
 
 declare -gAH ZINIT
+declare -U path
+path=($HOME/.local/bin $path)
+
+export PATH
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 ZINIT[HOME_DIR]=$HOME/.local/share/zinit
