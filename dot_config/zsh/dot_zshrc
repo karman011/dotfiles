@@ -104,7 +104,7 @@ zinit light romkatv/powerlevel10k
 
 #bunch of lazy load plug
 ZSHZ_DATA="$ZDOTDIR/.z"
-zinit light-mode wait'1' lucid nocompletions for \
+zinit light-mode wait lucid for \
     OMZP::extract \
     'https://raw.githubusercontent.com/denisidoro/navi/master/shell/navi.plugin.zsh' \
     depth'1' pick"shell/key-bindings.zsh" id-as"fzf_keybind" junegunn/fzf \
@@ -120,7 +120,7 @@ zinit ice as"completion" id-as"chezmoi_completion" nocompile depth'1' \
 zinit light zdharma-continuum/null
 
 #bunch of binary 
-zinit light-mode lucid from'gh-r' lbin'!' nocompile for \
+zinit light-mode lucid wait'0' from'gh-r' lbin'!' nocompile for \
   @junegunn/fzf \
   @sharkdp/fd \
   lbin'!**/rg' @BurntSushi/ripgrep \
@@ -129,14 +129,14 @@ zinit light-mode lucid from'gh-r' lbin'!' nocompile for \
   @denisidoro/navi \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
 
-zicompinit; zpcdreplay #completion must be loaded before this line
+#zicompinit; zpcdreplay #completion must be loaded before this line
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
 
 zinit light-mode lucid depth"1" for \
-    wait Aloxaf/fzf-tab \
+    atinit'zicompinit; zpcdreplay' wait Aloxaf/fzf-tab \
     zsh-users/zsh-autosuggestions
 
 # To customize prompt, run `p10k configure` or edit ${ZDOTDIR}/.p10k.zsh.
