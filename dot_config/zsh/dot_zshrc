@@ -17,7 +17,6 @@ fi
 declare -gAH ZINIT
 declare -U path
 path=($HOME/.local/bin $path)
-
 export PATH
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -95,24 +94,21 @@ zinit light zdharma-continuum/zinit-annex-binary-symlink
 zinit ice depth'1'
 zinit light romkatv/powerlevel10k
 
+#bunch of completions and snippet
 zinit wait'0a' lucid light-mode depth"1" for \
   atpull'zinit creinstall -q .' blockf zsh-users/zsh-completions \
-  pick"shell/key-bindings.zsh" id-as"fzf_keybind" junegunn/fzf
+  pick"shell/key-bindings.zsh" id-as"fzf_keybind" junegunn/fzf \
+  as"completion" id-as"chezmoi_completion" nocompile \
+  has"chezmoi" atclone"chezmoi completion zsh > _chezmoi" pick"_chezmoi" zdharma-continuum/null
 
-zinit ice lucid wait'0a' as"completion" id-as"chezmoi_completion" nocompile depth'1' \
-    has"chezmoi" \
-    atclone"chezmoi completion zsh > _chezmoi" \
-    pick"_chezmoi"
-zinit light zdharma-continuum/null
-
-#bunch of binary 
+#bunch of binary and their completions
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   @junegunn/fzf \
   @sharkdp/fd \
+  @denisidoro/navi \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"completions/exa.zsh -> _exa" @ogham/exa \
-  @denisidoro/navi \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
@@ -121,9 +117,9 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
 
 zinit light-mode wait'0b' lucid depth"1" for \
     atinit'zicompinit; zpcdreplay' Aloxaf/fzf-tab \
-     atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions
+    atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions
 
-#bunch of lazy load plug
+#bunch of lazy load plug, they don't need load early and no completion from them
 ZSHZ_DATA="$ZDOTDIR/.z"
 zinit light-mode wait'0c' lucid for \
     OMZP::extract \
