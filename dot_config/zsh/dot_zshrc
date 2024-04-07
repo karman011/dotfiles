@@ -16,7 +16,7 @@ fi
 
 declare -gAH ZINIT
 declare -U path
-path=($HOME/.local/bin $path)
+path=($HOME/.local/bin $HOME/.local/bin/flutter/bin $path)
 export PATH
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -103,13 +103,14 @@ zinit wait'0a' lucid light-mode depth"1" for \
 
 #bunch of binary and their completions
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
+  chmln/sd \
   @junegunn/fzf \
   @sharkdp/fd \
   @denisidoro/navi \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"completions/exa.zsh -> _exa" @ogham/exa \
-  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
+  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
