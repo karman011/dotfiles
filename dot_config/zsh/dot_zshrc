@@ -110,7 +110,7 @@ zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"completions/exa.zsh -> _exa" @ogham/exa \
-  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
+  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
