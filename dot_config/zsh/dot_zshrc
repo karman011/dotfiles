@@ -18,7 +18,7 @@ declare -gAH ZINIT
 declare -U path
 path=($HOME/.local/bin $HOME/.local/bin/flutter/bin $path)
 export PATH
-
+export GTK_IM_MODULE=ibus
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 ZINIT[HOME_DIR]=$HOME/.local/share/zinit
 ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git
@@ -106,11 +106,11 @@ zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   chmln/sd \
   @junegunn/fzf \
   @sharkdp/fd \
-  @denisidoro/navi \
+  atclone"**/bin/gh completion --shell zsh > _gh" lbin'**/bin/gh' @cli/cli \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"completions/exa.zsh -> _exa" @ogham/exa \
-  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat 
+  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -124,8 +124,8 @@ zinit light-mode wait'0b' lucid depth"1" for \
 ZSHZ_DATA="$ZDOTDIR/.z"
 zinit light-mode wait'0c' lucid for \
     OMZP::extract \
-    'https://raw.githubusercontent.com/denisidoro/navi/master/shell/navi.plugin.zsh' \
-    agkozak/zsh-z
+    agkozak/zsh-z \
+    loiccoyle/zsh-github-copilot
 
 # To customize prompt, run `p10k configure` or edit ${ZDOTDIR}/.p10k.zsh.
 [[ ! -f ${ZDOTDIR}/.p10k.zsh ]] || source ${ZDOTDIR}/.p10k.zsh
