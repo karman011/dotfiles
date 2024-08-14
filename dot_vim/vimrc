@@ -12,7 +12,9 @@ Plug 'yegappan/lsp'
 Plug 'girishji/vimcomplete'
 Plug 'preservim/nerdtree'
 Plug 'embark-theme/vim', { 'as': 'embark', 'branch': 'main' }
+Plug 'nordtheme/vim'
 Plug 'puremourning/vimspector'
+Plug 'vim-airline/vim-airline'
 plug#end()
 
 # LSP
@@ -83,6 +85,10 @@ var vcoptions = {
 }
 
 autocmd VimEnter * call g:VimCompleteOptionsSet(vcoptions)
+
+# Airline
+g:airline#extensions#tabline#enabled = 1
+
 # ShortKey
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -92,6 +98,9 @@ nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+
+# Wayland Clipboard
+xnoremap "+y y:call system('wl-copy', @")<CR>
 
 # Theme 
 

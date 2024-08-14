@@ -111,6 +111,10 @@ zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
 
+# Neovim Appimage
+zinit ice wait'0a' lucid from"gh-r" bpick'*appimage*' id-as'neovim/appimage' mv"nvim* -> nvim" lbin'!'
+zinit light neovim/neovim
+
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
