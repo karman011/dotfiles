@@ -104,6 +104,7 @@ zinit wait'0a' lucid light-mode depth"1" for \
 
 #bunch of binary and their completions
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
+  bpick'*default*' @steven-omaha/pacdef \
   @junegunn/fzf \
   @sharkdp/fd \
   atclone"**/bin/gh completion --shell zsh > _gh" lbin'!**/bin/gh' @cli/cli \
