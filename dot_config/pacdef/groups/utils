@@ -1,9 +1,0 @@
-[fedora]
-kernel-tools
-igt-gpu-tools
-ibus-rime
-tlp
-wl-clipboard
-librime
-librime-lua
-smartmontools
