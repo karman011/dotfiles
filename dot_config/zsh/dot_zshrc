@@ -106,7 +106,6 @@ zinit wait'0a' lucid light-mode depth"1" for \
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   @junegunn/fzf \
   @sharkdp/fd \
-  atclone"**/bin/gh completion --shell zsh > _gh" lbin'!**/bin/gh' @cli/cli \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
