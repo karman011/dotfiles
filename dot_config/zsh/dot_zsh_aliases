@@ -1,0 +1,2 @@
+alias code="/usr/bin/flatpak run com.visualstudio.code"
+alias ll='ls -la'
