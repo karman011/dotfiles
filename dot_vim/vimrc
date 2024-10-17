@@ -21,7 +21,6 @@ Plug 'girishji/vimcomplete'
 Plug 'preservim/nerdtree'
 Plug 'embark-theme/vim', { 'as': 'embark', 'branch': 'main' }
 Plug 'nordtheme/vim'
-Plug 'puremourning/vimspector'
 Plug 'vim-airline/vim-airline'
 plug#end()
 

@@ -18,6 +18,10 @@ fi
 #    source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zsh_aliases"
 #fi
 
+declare -U path
+path=($HOME/.local/bin $path)
+export PATH
+
 if [ ! -f "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc" ]; then
     touch "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc"
 fi
@@ -25,9 +29,6 @@ fi
 source "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc"
 
 declare -gAH ZINIT
-declare -U path
-path=($HOME/.local/bin $path)
-export PATH
 export GTK_IM_MODULE=ibus
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 ZINIT[HOME_DIR]=$HOME/.local/share/zinit
@@ -69,17 +70,13 @@ zstyle ':fzf-tab:complete:*' fzf-bindings \
 	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
 	'ctrl-a:select-all'
 zstyle ':completion:*' menu select
-
-# systemctl preview
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:*' fzf-preview '([[ -f $realpath ]] && (bat --style=numbers --color=always $realpath || cat $realpath)) || ([[ -d $realpath ]] && (ls -1 --color=always $realpath)) || echo $realpath 2> /dev/null | head -200'
+#zstyle ':fzf-tab:complete:*' fzf-preview '([[ -f $realpath ]] && (bat --style=numbers --color=always $realpath || cat $realpath)) || ([[ -d $realpath ]] && (ls -1 --color=always $realpath)) || echo $realpath 2> /dev/null | head -200'
 zstyle ':fzf-tab:*' ignore 4
 
 # kill preview
-zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
-  '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $USER -o pid,user,comm -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
 zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
 
 # history opt
@@ -116,7 +113,9 @@ zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   @sharkdp/fd \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
-  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat
+  mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat \
+  lbin'!**/lazygit' @jesseduffield/lazygit
+
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -130,8 +129,7 @@ zinit light-mode wait'0b' lucid depth"1" for \
 ZSHZ_DATA="$ZDOTDIR/.z"
 zinit light-mode wait'0c' lucid for \
     OMZP::extract \
-    agkozak/zsh-z 
-
+    agkozak/zsh-z
 # To customize prompt, run `p10k configure` or edit ${ZDOTDIR}/.p10k.zsh.
 [[ ! -f ${ZDOTDIR}/.p10k.zsh ]] || source ${ZDOTDIR}/.p10k.zsh
 
