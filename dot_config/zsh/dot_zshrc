@@ -114,7 +114,7 @@ zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   lbin'!**/rg' @BurntSushi/ripgrep \
   atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
   mv"bat*/autocomplete/bat.zsh -> _bat" @sharkdp/bat \
-  @extrawurst/gitui
+  lbin'!**/lazygit' @jesseduffield/lazygit
 
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
