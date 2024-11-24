@@ -107,6 +107,9 @@ zinit wait'0a' lucid light-mode depth"1" for \
   as"completion" id-as"chezmoi_completion" nocompile \
   has"chezmoi" atclone"chezmoi completion zsh > _chezmoi" pick"_chezmoi" zdharma-continuum/null
 
+zi ice as"completion"
+zi snippet OMZP::docker/completions/_docker
+
 #bunch of binary and their completions
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   @junegunn/fzf \
