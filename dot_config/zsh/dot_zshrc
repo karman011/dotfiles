@@ -26,6 +26,10 @@ if [ ! -f "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc" ]; then
     touch "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc"
 fi
 
+alias sudo='sudo '
+alias sc='systemctl '
+alias scu='systemctl --user '
+
 source "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.tmprc"
 
 declare -gAH ZINIT
