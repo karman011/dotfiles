@@ -19,10 +19,7 @@ fi
 #fi
 
 typeset -U path
-path=($HOME/.pack/bin $HOME/.local/bin $path)
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-export PATH="$HOME/.cabal/bin:$HOME/.ghcup/bin:$PATH"
-typeset -U path
+path=($HOME/.cabal/bin $HOME/.ghcup/bin $HOME/.pack/bin $HOME/.local/bin $path)
 
 alias sudo='sudo '
 alias sc='systemctl '
@@ -122,7 +119,10 @@ zi snippet OMZP::docker/completions/_docker
 #bunch of binary and their completions
 zinit light-mode wait'0a' lucid from'gh-r' lbin'!' nocompile for \
   @junegunn/fzf \
-  @sharkdp/fd 
+  @sharkdp/fd \
+  atclone"./topgrade --gen-completion zsh > _topgrade" @topgrade-rs/topgrade \
+  atclone"**/bin/gh completion --shell zsh > _gh" lbin'!**/bin/gh' @cli/cli
+
 
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
